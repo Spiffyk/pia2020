@@ -1,12 +1,8 @@
 package cz.zcu.fav.pia.jsf.repo.impl;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-
+import cz.zcu.fav.pia.jsf.domain.User;
+import cz.zcu.fav.pia.jsf.repo.UserRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,9 +11,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
-import cz.zcu.fav.pia.jsf.domain.User;
-import cz.zcu.fav.pia.jsf.repo.UserRepo;
-import lombok.RequiredArgsConstructor;
+import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor
@@ -46,6 +44,15 @@ public class FakeUserRepoImpl implements UserRepo, UserDetailsService {
 		this.users.put(username, user);
 	}
 
+	@Override
+	public void changeUserPassword(String username, String newPassword) {
+		this.users.computeIfPresent(username, (key, oldUser) -> User.builder()
+				.username(oldUser.getUsername())
+				.authorities(oldUser.getAuthorities())
+				.password(encoder.encode(newPassword))
+				.build());
+	}
+
 	@PostConstruct
 	private void setup() {
 		addUser("user", PASSWORD, USER);
@@ -58,4 +65,8 @@ public class FakeUserRepoImpl implements UserRepo, UserDetailsService {
 		return this.users.computeIfAbsent(username, k -> { throw new UsernameNotFoundException(username); });
 	}
 
+	@Override
+	public User getUserByName(String name) {
+		return this.users.get(name);
+	}
 }
