@@ -8,6 +8,7 @@ function getHeaders() {
 // Updates the view after a successful REST call.
 function ajaxSuccess(data) {
 	$('#countView').html(data);
+	$('#setForm\\:inputCount').val(data);
 }
 
 // Calls the click REST call - used as an event method for the CLICK button.

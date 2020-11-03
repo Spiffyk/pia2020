@@ -24,7 +24,7 @@
 						</h:commandLink>
 						<h:commandLink styleClass="btn btn-primary btn-lg mr-4" action="#{clickService.click}">
 							click <sup><span class="badge badge-warning badge-pill">ajax</span></sup>
-							<f:ajax render="countView" />
+							<f:ajax render="countView :setForm:inputCount" />
 						</h:commandLink>
 						<a href="#" class="btn btn-primary btn-lg mr-4" onclick="clickButton(); return false;">
 							click <sup><span class="badge badge-warning badge-pill">rest</span></sup>
